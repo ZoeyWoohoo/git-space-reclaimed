@@ -50,26 +50,6 @@ git-space-reclaimed --cn --v
 git-space-reclaimed --v --cn
 ```
 
-## Language Selection
-
-The script automatically detects your system language and displays messages accordingly. You can:
-
-1. Use environment variables:
-```bash
-# Use Chinese
-export LANG=zh_CN.UTF-8
-git-space-reclaimed
-
-# Use English
-export LANG=en_US.UTF-8
-git-space-reclaimed
-```
-
-2. Force Chinese output with --cn option:
-```bash
-git-space-reclaimed --cn
-```
-
 ## Notes
 
 - Must be run in a Git repository directory
@@ -78,4 +58,4 @@ git-space-reclaimed --cn
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details. 
+[MIT License](LICENSE) 
