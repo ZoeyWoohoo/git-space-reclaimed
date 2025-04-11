@@ -14,6 +14,18 @@
 
 ## 安装方法
 
+### 方式一：使用 Homebrew Tap（推荐）
+
+```bash
+# 添加 tap 仓库
+brew tap zoeywoohoo/barn
+
+# 安装 git-space-reclaimed
+brew install git-space-reclaimed
+```
+
+### 方式二：一键安装
+
 使用以下命令一键安装：
 
 ```bash
@@ -27,23 +39,22 @@ curl -sSL https://raw.githubusercontent.com/ZoeyWoohoo/git-space-reclaimed/main/
 git-space-reclaimed
 
 # 分析当前提交并显示调试信息
-git-space-reclaimed --v
+git-space-reclaimed [--v|-v|--verbose|-verbose]
 
 # 分析指定的提交
 git-space-reclaimed <commit-hash>
 
 # 分析指定的提交并显示调试信息
-git-space-reclaimed --v <commit-hash>
+git-space-reclaimed [--v|-v|--verbose|-verbose] <commit-hash>
 
 # 显示帮助信息
-git-space-reclaimed --h
+git-space-reclaimed [--h|-h|--help|-help]
 
 # 强制使用中文输出
 git-space-reclaimed --cn
 
 # 组合使用选项（顺序无关）
-git-space-reclaimed --cn --v
-git-space-reclaimed --v --cn
+git-space-reclaimed --cn [--v|-v|--verbose|-verbose]
 ```
 
 ## 注意事项

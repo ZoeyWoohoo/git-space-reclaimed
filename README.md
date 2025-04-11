@@ -16,7 +16,17 @@ A tool for analyzing and reporting the amount of storage space reclaimed by dele
 
 ## Installation
 
-One-click installation:
+### Option 1: Homebrew Tap (Recommended)
+
+```bash
+# Add the tap
+brew tap zoeywoohoo/barn
+
+# Install git-space-reclaimed
+brew install git-space-reclaimed
+```
+
+### Option 2: One-click installation
 
 ```bash
 curl -sSL https://raw.githubusercontent.com/ZoeyWoohoo/git-space-reclaimed/main/install.sh | sudo bash
@@ -29,23 +39,22 @@ curl -sSL https://raw.githubusercontent.com/ZoeyWoohoo/git-space-reclaimed/main/
 git-space-reclaimed
 
 # Analyze current commit with debug info
-git-space-reclaimed --v
+git-space-reclaimed [--v|-v|--verbose|-verbose]
 
 # Analyze specific commit
 git-space-reclaimed <commit-hash>
 
 # Analyze specific commit with debug info
-git-space-reclaimed --v <commit-hash>
+git-space-reclaimed [--v|-v|--verbose|-verbose] <commit-hash>
 
 # Show help information
-git-space-reclaimed --h
+git-space-reclaimed [--h|-h|--help|-help]
 
 # Force Chinese output
 git-space-reclaimed --cn
 
 # Combine options (order doesn't matter)
-git-space-reclaimed --cn --v
-git-space-reclaimed --v --cn
+git-space-reclaimed --cn [--v|-v|--verbose|-verbose]
 ```
 
 ## Notes

@@ -25,6 +25,15 @@ get_lang() {
     fi
 }
 
+# 显示语言环境变量信息
+show_lang_info() {
+    if [ "$debug_mode" = true ]; then
+        echo "Selected language: $(get_lang)"
+        echo "Force Chinese: $force_cn"
+        echo
+    fi
+}
+
 # 根据语言获取消息
 get_message() {
     local lang=$(get_lang)
@@ -78,31 +87,6 @@ get_message() {
     esac
 }
 
-# 初始化变量
-debug_mode=false
-force_cn=false
-commit_hash="HEAD"
-
-# 解析命令行参数
-for arg in "$@"; do
-    case "$arg" in
-        --h)
-            show_help
-            ;;
-        --v)
-            debug_mode=true
-            ;;
-        --cn)
-            force_cn=true
-            ;;
-        *)
-            if [ "$commit_hash" = "HEAD" ]; then
-                commit_hash=$arg
-            fi
-            ;;
-    esac
-done
-
 # 显示帮助信息
 show_help() {
     echo "$(get_message "usage")"
@@ -124,6 +108,34 @@ show_help() {
     echo "$(get_message "example6")"
     exit 0
 }
+
+# 初始化变量
+debug_mode=false
+force_cn=false
+commit_hash="HEAD"
+
+# 解析命令行参数
+for arg in "$@"; do
+    case "$arg" in
+        --h|-h|--help|-help)
+            show_help
+            ;;
+        --v|-v|--verbose|-verbose)
+            debug_mode=true
+            ;;
+        --cn)
+            force_cn=true
+            ;;
+        *)
+            if [ "$commit_hash" = "HEAD" ]; then
+                commit_hash=$arg
+            fi
+            ;;
+    esac
+done
+
+# 显示语言环境变量信息
+show_lang_info
 
 # 创建临时文件
 temp_file=$(mktemp)
