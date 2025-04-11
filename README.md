@@ -2,8 +2,6 @@
 
 [English](#english) | [中文](README_CN.md)
 
-<h2 id="english">English</h2>
-
 A tool for analyzing and reporting the amount of storage space reclaimed by deleting image files in Git repositories.
 
 ## Features
