@@ -1,10 +1,9 @@
 #!/bin/bash
 
-# 检查是否在 Git 仓库中
-if ! git rev-parse --git-dir > /dev/null 2>&1; then
-    echo "$(get_message "not_git_repo")"
-    exit 1
-fi
+# 初始化变量
+debug_mode=false
+force_cn=false
+commit_hash="HEAD"
 
 # 国际化支持
 get_lang() {
@@ -109,11 +108,6 @@ show_help() {
     exit 0
 }
 
-# 初始化变量
-debug_mode=false
-force_cn=false
-commit_hash="HEAD"
-
 # 解析命令行参数
 for arg in "$@"; do
     case "$arg" in
@@ -136,6 +130,12 @@ done
 
 # 显示语言环境变量信息
 show_lang_info
+
+# 检查是否在 Git 仓库中
+if ! git rev-parse --git-dir > /dev/null 2>&1; then
+    echo "$(get_message "not_git_repo")"
+    exit 1
+fi
 
 # 创建临时文件
 temp_file=$(mktemp)
