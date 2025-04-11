@@ -5,6 +5,10 @@ debug_mode=false
 force_cn=false
 commit_hash="HEAD"
 
+# 颜色定义
+RED='\033[0;31m'
+NC='\033[0m' # No Color
+
 # 国际化支持
 get_lang() {
     # 如果指定了 --cn 参数，强制使用中文
@@ -39,8 +43,9 @@ get_message() {
     case "$lang" in
         zh_CN|zh_TW|zh)
             case "$1" in
-                "not_git_repo") echo "错误: 当前目录不是 Git 仓库" ;;
-                "usage") echo "使用方法: $0 [选项] [commit-hash]" ;;
+                "not_git_repo") echo -e "${RED}错误: 当前目录不是 Git 仓库${NC}" ;;
+                "invalid_arg") echo -e "${RED}错误: 非法参数: $2${NC}" ;;
+                "usage") echo "使用方法: git-space-reclaimed [选项] [commit-hash]" ;;
                 "options") echo "选项:" ;;
                 "help_opt") echo "  --h    显示此帮助信息" ;;
                 "debug_opt") echo "  --v    显示调试信息" ;;
@@ -48,12 +53,12 @@ get_message() {
                 "params") echo "参数:" ;;
                 "commit_param") echo "  commit-hash    要分析的 Git 提交哈希值（可选，默认为 HEAD）" ;;
                 "examples") echo "示例:" ;;
-                "example1") echo "  $0                 # 分析当前提交（HEAD）" ;;
-                "example2") echo "  $0 --v             # 分析当前提交并显示调试信息" ;;
-                "example3") echo "  $0 abc123          # 分析指定的提交" ;;
-                "example4") echo "  $0 --v abc123      # 分析指定的提交并显示调试信息" ;;
-                "example5") echo "  $0 abc123 --v      # 同上，参数顺序可调" ;;
-                "example6") echo "  $0 --cn            # 使用中文输出" ;;
+                "example1") echo "分析当前提交（HEAD）" ;;
+                "example2") echo "分析当前提交并显示调试信息" ;;
+                "example3") echo "分析指定的提交" ;;
+                "example4") echo "分析指定的提交并显示调试信息" ;;
+                "example5") echo "同上，参数顺序可调" ;;
+                "example6") echo "使用中文输出" ;;
                 "processing_line") echo "处理行: $line" ;;
                 "file_path") echo "文件路径: $file_path" ;;
                 "matched_image") echo "匹配到图片文件，大小: $size" ;;
@@ -62,8 +67,9 @@ get_message() {
             ;;
         *)
             case "$1" in
-                "not_git_repo") echo "Error: Not a Git repository" ;;
-                "usage") echo "Usage: $0 [options] [commit-hash]" ;;
+                "not_git_repo") echo -e "${RED}Error: Not a Git repository${NC}" ;;
+                "invalid_arg") echo -e "${RED}Error: Invalid option: $2${NC}" ;;
+                "usage") echo "Usage: git-space-reclaimed [options] [commit-hash]" ;;
                 "options") echo "Options:" ;;
                 "help_opt") echo "  --h    Show this help message" ;;
                 "debug_opt") echo "  --v    Show debug information" ;;
@@ -71,12 +77,12 @@ get_message() {
                 "params") echo "Parameters:" ;;
                 "commit_param") echo "  commit-hash    Git commit hash to analyze (optional, defaults to HEAD)" ;;
                 "examples") echo "Examples:" ;;
-                "example1") echo "  $0                 # Analyze current commit (HEAD)" ;;
-                "example2") echo "  $0 --v             # Analyze current commit with debug info" ;;
-                "example3") echo "  $0 abc123          # Analyze specific commit" ;;
-                "example4") echo "  $0 --v abc123      # Analyze specific commit with debug info" ;;
-                "example5") echo "  $0 abc123 --v      # Same as above, parameter order flexible" ;;
-                "example6") echo "  $0 --cn            # Use Chinese output" ;;
+                "example1") echo "Analyze current commit (HEAD)" ;;
+                "example2") echo "Analyze current commit with debug info" ;;
+                "example3") echo "Analyze specific commit" ;;
+                "example4") echo "Analyze specific commit with debug info" ;;
+                "example5") echo "Same as above, parameter order flexible" ;;
+                "example6") echo "Use Chinese output" ;;
                 "processing_line") echo "Processing line: $line" ;;
                 "file_path") echo "File path: $file_path" ;;
                 "matched_image") echo "Matched image file, size: $size" ;;
@@ -99,16 +105,17 @@ show_help() {
     echo "$(get_message "commit_param")"
     echo
     echo "$(get_message "examples")"
-    echo "$(get_message "example1")"
-    echo "$(get_message "example2")"
-    echo "$(get_message "example3")"
-    echo "$(get_message "example4")"
-    echo "$(get_message "example5")"
-    echo "$(get_message "example6")"
+    echo "  git-space-reclaimed                 # $(get_message "example1")"
+    echo "  git-space-reclaimed --v             # $(get_message "example2")"
+    echo "  git-space-reclaimed abc123          # $(get_message "example3")"
+    echo "  git-space-reclaimed --v abc123      # $(get_message "example4")"
+    echo "  git-space-reclaimed abc123 --v      # $(get_message "example5")"
+    echo "  git-space-reclaimed --cn            # $(get_message "example6")"
     exit 0
 }
 
 # 解析命令行参数
+invalid_arg=""
 for arg in "$@"; do
     case "$arg" in
         --h|-h|--help|-help)
@@ -120,6 +127,29 @@ for arg in "$@"; do
         --cn)
             force_cn=true
             ;;
+        --*)
+            # 检查长选项
+            if [[ "$arg" != "--h" && "$arg" != "--help" && "$arg" != "--v" && "$arg" != "--verbose" && "$arg" != "--cn" ]]; then
+                invalid_arg="$arg"
+            fi
+            ;;
+        -[a-zA-Z]*)
+            # 检查短选项组合
+            for ((i=1; i<${#arg}; i++)); do
+                case "${arg:$i:1}" in
+                    h)
+                        show_help
+                        ;;
+                    v)
+                        debug_mode=true
+                        ;;
+                    *)
+                        invalid_arg="${arg:$i:1}"
+                        break
+                        ;;
+                esac
+            done
+            ;;
         *)
             if [ "$commit_hash" = "HEAD" ]; then
                 commit_hash=$arg
@@ -127,6 +157,14 @@ for arg in "$@"; do
             ;;
     esac
 done
+
+# 如果遇到非法参数，显示错误信息并退出
+if [ ! -z "$invalid_arg" ]; then
+    echo "$(get_message "invalid_arg" "$invalid_arg")"
+    echo
+    show_help
+    exit 1
+fi
 
 # 显示语言环境变量信息
 show_lang_info
