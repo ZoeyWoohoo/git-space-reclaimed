@@ -1,6 +1,6 @@
 # Git Space Reclaimed
 
-[English](#english) | [中文](README_CN.md)
+**English** | [中文](README_CN.md)
 
 A tool for analyzing and reporting the amount of storage space reclaimed by deleting image files in Git repositories.
 
@@ -65,4 +65,4 @@ git-space-reclaimed --cn [--v|-v|--verbose|-verbose]
 
 ## License
 
-[MIT License](LICENSE) 
+[MIT License](LICENSE)
